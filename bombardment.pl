@@ -1,3 +1,4 @@
+:- initialization(main).
 
 /* Impressões de avisos */
 
@@ -7,20 +8,25 @@ acertou :-
 errou :-
   write('ERROU!'), nl.
 
-invalido :-
+ocupado :-
   write('Você já atirou aqui! Atire em outro lugar.'), nl.
+
+invalido : -
+ writeln('Você atirou em uma coordenada invalida! Atire em outro lugar.').
 
 /* Fim do jogo */
 
 gameOver :-
   write('---------------------------------------------------'), nl,
   write('Voce nao foi capaz de destruir as bases inimigas a tempo.'), nl,
-  write('---------------------------------------------------').
+  write('---------------------------------------------------')
+  sair().
 
 vitoria :-
   write('---------------------------------------------------'), nl,
   write('Você destruiu todas as bases inimiga e conseguiu SALVAR O MUNDO!'), nl,
-  write('---------------------------------------------------').
+  write('---------------------------------------------------')
+  sair().
 
 resumo :-
 	writeln('   No ano de 2046, um grupo de cientista conseguem terminar o maior feito'),
@@ -33,7 +39,8 @@ resumo :-
 	writeln('acontecido. Só que a arma biológica irá ser usada no ano de 2019 no dia 5 de'),
 	writeln('março e faltando apenas um dia para impedir esses ataques, vão bombardear pontos'),
 	writeln('exatos para a destruição dessas instalações e assim salvando a humanidade.'),
-	writeln('Ajude Irineu a Salvar o Mundo !!!').
+	writeln('Ajude Irineu a Salvar o Mundo !!!'),nl,
+	writeln('--------------------------------------------------------------------------'),nl.
 
 /* Criação do tabuleiro */
 
@@ -63,7 +70,71 @@ imprimeLinhaJogador([H|T]) :-
   H == x, write('x')), write(' '),
   imprimeLinhaJogador(T).
 
-:- initialization(main).
+converte(Letra, Numero) :-
+  Letra == A -> Numero = 1;
+  Letra == B -> Numero = 2;
+  Letra == C -> Numero = 3;
+  Letra == D -> Numero = 4;
+  Letra == E -> Numero = 5;
+  Letra == F -> Numero = 6;
+  Letra == G -> Numero = 7;
+  Letra == H -> Numero = 8;
+  Letra == I -> Numero = 9;
+  Letra == J -> Numero = 10;
+  Letra == L -> Numero = 11;
+  Letra == M -> Numero = 12.
+  
+atirar(Coluna, Linha, Tabuleiro, Tiros, Pontos) :-
+  percorrerMatriz(Coluna, Linha, Tabuleiro, Retorno),
+  Retorno =:= 1 -> Tiros = Tiros - 1, Pontos = Pontos + 1, jogar(Tiros, Pontos);
+  Retorno =:= 2 -> Tiros = Tiros - 1, jogar(Tiros, Pontos);
+  Retorno =:= 3 -> jogar(Tiros, Pontos).  
+
+percorrerMatriz(Coluna, Linha, Tabuleiro,Retorno) :-  
+  percorrerLinha(Linha, Tabuleiro, T),
+  percorrerColuna(Coluna, T, Retorno).
+
+percorrerLinha(Linha, X, [T|_]) :- 
+  Linha =:= X -> T;
+  Linha /= Y -> X is X+1, J is [H|Z], percorrerLinha(Coluna, Y, J).
+
+percorrerLinha(Coluna, Tabuleiro, T) :- !
+ percorrerLinha(Coluna, 0, Tabuleiro).
+  
+percorrerColuna(Coluna, X, [T|_]) :- 
+  Coluna =:= X -> T;
+  Coluna /= Y -> X is X+1, J is [H|Z], percorrerLinha(Coluna, Y, J).
+
+percorrerLinha(Coluna, Linha, T) :- !
+ percorrerLinha(Coluna, 0, Linha).
+
+
+validarCondicaoParada(Tiros, Pontos, Tabuleiro) :-
+  Pontos =:= 18 -> vitoria();
+  Tiros =:= 0 -> gameOver();
+  Tiros > 0 -> receberCoodenadas(Tiros, Pontos,Tabuleiro).     
+  
+
+receberCoodenadas(Tiros, Pontos, Tabuleiro) :-    
+  write('Digite as Coordenadas!'),  
+  nl,write('Digite Numero da Linha: '),
+   read_line_to_codes(user_input, LinhaNumero),
+      string_to_atom(LinhaNumero,Numero),
+         atom_number(Numero,Linha),
+  write('Digite Letra da Coluna: '),  
+   read_line_to_codes(user_input, ColunaLetra),
+      string_to_atom(ColunaLetra, ColunaLetra2),
+      converte(ColunaLetra2, Coluna), 
+  atirar(Coluna, Linha, Tabuleiro,  Tiros, Pontos).
+
+sair() :- halt(0).
+
+jogar(Tiros, Pontos, Tabuleiro) :-
+  imprimeTabuleiroJogador(Tabuleiro),
+  validarCondicaoParada(Tiros, Pontos, Tabuleiro).
+
+
 main :-
-  gerarTabuleiro(TabuleiroRamdomicoAux),
-   imprimeTabuleiroJogador(TabuleiroRamdomicoAux).
+  resumo(),
+  gerarTabuleiro(TabuleiroRamdomicoAux),  
+  jogar(45,0,TabuleiroRamdomicoAux).
