@@ -84,30 +84,36 @@ converte(Letra, Numero) :-
   Letra = l -> Numero = 11;
   Letra = m -> Numero = 12.
   
-atirar(Coluna, Linha, Tabuleiro, Tiros, Pontos) :-
-  write('atirar'),
-  percorrerMatriz(Coluna, Linha, Tabuleiro, Retorno),
+atirar(Retorno, Tiros, Pontos) :-
   Retorno =:= 1 -> Tiros = Tiros - 1, Pontos = Pontos + 1, jogar(Tiros, Pontos);
   Retorno =:= 2 -> Tiros = Tiros - 1, jogar(Tiros, Pontos);
-  Retorno =:= 3 -> jogar(Tiros, Pontos).  
+  Retorno =:= 3 -> jogar(Tiros, Pontos). 
 
-percorrerMatriz(Coluna, Linha, Tabuleiro,Retorno) :-  
+atirar(Coluna, Linha, Tabuleiro, Tiros, Pontos) :-
+  write('atirar'),
+  percorrerMatriz(Coluna, Linha, Tabuleiro, Tiros, Pontos).
+   
+
+percorrerMatriz(Coluna, Linha, Tabuleiro, Tiros, Pontos) :-  
   percorrerLinha(Linha, Tabuleiro, T),
-  percorrerColuna(Coluna, T, Retorno).
+  percorrerColuna(Coluna, T, Retorno),
+  atirar(Retorno, Tiros, Pontos).
 
 percorrerLinha(Linha, X, [T|_]) :- 
   Linha =:= X -> T;
-  Linha /= Y -> X is X+1, J is [H|Z], percorrerLinha(Coluna, Y, J).
+  Linha =\= X -> Y is X+1, J is [H|Z], percorrerLinha(Coluna, Y, J).
 
-percorrerLinha(Coluna, Tabuleiro, T) :- !
- percorrerLinha(Coluna, 0, Tabuleiro).
+percorrerLinha(Linha, Tabuleiro, T) :- 
+ percorrerLinha(Linha, 0, R),
+ T = R.
   
 percorrerColuna(Coluna, X, [T|_]) :- 
   Coluna =:= X -> T;
-  Coluna /= Y -> X is X+1, J is [H|Z], percorrerLinha(Coluna, Y, J).
+  Coluna =\= X -> Y is X+1, J is [H|Z], percorrerColuna(Coluna, Y, J).
 
-percorrerLinha(Coluna, Linha, T) :- !
- percorrerLinha(Coluna, 0, Linha).
+percorrerColuna(Coluna, Linha, T) :- 
+ percorrerColuna(Coluna, 0, Linha, Retorno),
+ T = Retorno.
 
 
 validarCondicaoParada(Tiros, Pontos, Tabuleiro) :-
