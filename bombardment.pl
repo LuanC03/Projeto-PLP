@@ -71,20 +71,21 @@ imprimeLinhaJogador([H|T]) :-
   imprimeLinhaJogador(T).
 
 converte(Letra, Numero) :-
-  Letra == A -> Numero = 1;
-  Letra == B -> Numero = 2;
-  Letra == C -> Numero = 3;
-  Letra == D -> Numero = 4;
-  Letra == E -> Numero = 5;
-  Letra == F -> Numero = 6;
-  Letra == G -> Numero = 7;
-  Letra == H -> Numero = 8;
-  Letra == I -> Numero = 9;
-  Letra == J -> Numero = 10;
-  Letra == L -> Numero = 11;
-  Letra == M -> Numero = 12.
+  Letra = a -> Numero = 1;
+  Letra = b -> Numero = 2;
+  Letra = c -> Numero = 3;
+  Letra = d -> Numero = 4;
+  Letra = e -> Numero = 5;
+  Letra = f -> Numero = 6;
+  Letra = g -> Numero = 7;
+  Letra = h -> Numero = 8;
+  Letra = i -> Numero = 9;
+  Letra = j -> Numero = 10;
+  Letra = l -> Numero = 11;
+  Letra = m -> Numero = 12.
   
 atirar(Coluna, Linha, Tabuleiro, Tiros, Pontos) :-
+  write('atirar'),
   percorrerMatriz(Coluna, Linha, Tabuleiro, Retorno),
   Retorno =:= 1 -> Tiros = Tiros - 1, Pontos = Pontos + 1, jogar(Tiros, Pontos);
   Retorno =:= 2 -> Tiros = Tiros - 1, jogar(Tiros, Pontos);
