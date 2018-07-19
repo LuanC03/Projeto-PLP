@@ -14,6 +14,12 @@ ocupado :-
 invalido : -
  writeln('Você atirou em uma coordenada invalida! Atire em outro lugar.').
 
+selecione :-
+  write('Selecione as coordenadas de onde deseja atirar!'), nl.
+
+selecaoInvalida :-
+  write('Coordenadas inválidas. Tente novamente.'), nl.
+
 /* Fim do jogo */
 
 gameOver :-
@@ -41,6 +47,12 @@ resumo :-
 	writeln('exatos para a destruição dessas instalações e assim salvando a humanidade.'),
 	writeln('Ajude Irineu a Salvar o Mundo !!!'),nl,
 	writeln('--------------------------------------------------------------------------'),nl.
+
+/* Busca De Elemento */
+
+encontraElementoNaMatriz(Matriz, Linha, Coluna, Simbolo) :-
+  nth0(Linha, Matriz, ListaDaPos),
+  nth0(Coluna, ListaDaPos, Simbolo).
 
 /* Criação do tabuleiro */
 
@@ -123,7 +135,7 @@ validarCondicaoParada(Tiros, Pontos, Tabuleiro) :-
   
 
 receberCoodenadas(Tiros, Pontos, Tabuleiro) :-    
-  write('Digite as Coordenadas!'),  
+  selecione,  
   nl,write('Digite Numero da Linha: '),
    read_line_to_codes(user_input, LinhaNumero),
       string_to_atom(LinhaNumero,Numero),
