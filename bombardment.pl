@@ -54,6 +54,15 @@ encontraElementoNaMatriz(Matriz, Linha, Coluna, Simbolo) :-
   nth0(Linha, Matriz, ListaDaPos),
   nth0(Coluna, ListaDaPos, Simbolo).
 
+/*Funções para verificar se existe base*/
+
+contem([X|_], X).
+contem([_|T], X) :-
+  contem(T, X).
+
+existemBase([H|_]) :- contem(H, n).
+existemBase([_|T]) :- existemBase(T).
+
 /* Criação do tabuleiro */
 
 gerarTabuleiro([[~,~,~,~,~,~,~,~,~,~,~,~],[~,~,~,~,~,~,~,~,~,~,~,~],[~,~,~,~,~,~,~,~,~,~,~,~],
