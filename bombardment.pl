@@ -1,6 +1,51 @@
-:- initialization(main).
+/* Regras para realizar tiros, manipulando o tabuleiro */
 
-/* Impressões de avisos */
+atirar(Tabuleiro, NovoTabuleiro) :-
+  selecione,
+  inserir_numero('Linha', Linha),
+  inserir_numero('Coluna', Coluna).
+
+alteraValorNoTabuleiro([H|T], 0, Coluna, NovoValor, [J|T]) :- substituir(H, Coluna, NovoValor, J).
+alteraValorNoTabuleiro([H|T], Linha, Coluna, NovoValor, [H|U]) :-
+   Linha1 is Linha - 1, alteraValorNoTabuleiro(T, Linha1, Coluna, NovoValor, U).
+
+encontraSimboloNaMatriz(Matriz, Linha, Coluna, Simbolo) :-
+  nth0(Linha, Matriz, ListaDaPos),
+  nth0(Coluna, ListaDaPos, Simbolo).
+
+substituir([_|T], 0, X, [X|T]).
+substituir([H|T], Index, NewElement, [H|U]) :-
+  Index1 is Index - 1, substituir(T, Index1, NewElement, U).
+
+
+/* EXIBIÇÃO */
+
+/* Impressão da visão que o jogador tem do tabuleiro, omitindo navios */
+
+imprimeTabuleiroJogador(Tabuleiro) :-
+  write('############ BOMBARDMENT OF THE VIRUS ###########'),nl,nl,
+  write('    A   B   C   D   E   F   G   H   I   J   L   M'),nl,nl,
+  imprimeMatrizJogador(Tabuleiro, 0),
+  write('~ = Terreno | n = Area | X = TIRO PERDIDO').
+
+imprimeMatrizJogador([], _).
+imprimeMatrizJogador([H|T], Index) :-
+    write(Index), write('  '), imprimeLinhaJogador(H), nl,nl,
+    NewIndex is Index+1,
+    imprimeMatrizJogador(T, NewIndex).
+
+imprimeLinhaJogador([]).
+imprimeLinhaJogador([H|T]) :-
+  (H == '~', write('|_|');
+  H == n, write('|o|');
+  H == b, write('|*|');
+  H == a, write('|#|');
+  H == @, write('|X|');
+  H == &, write('')), write(' '),
+  imprimeLinhaJogador(T).
+
+
+/* Impressões simples */
 
 acertou :-
   write('ACERTOU!'), nl.
@@ -8,11 +53,8 @@ acertou :-
 errou :-
   write('ERROU!'), nl.
 
-ocupado :-
+invalido :-
   write('Você já atirou aqui! Atire em outro lugar.'), nl.
-
-invalido : -
- writeln('Você atirou em uma coordenada invalida! Atire em outro lugar.').
 
 selecione :-
   write('Selecione as coordenadas de onde deseja atirar!'), nl.
@@ -20,149 +62,97 @@ selecione :-
 selecaoInvalida :-
   write('Coordenadas inválidas. Tente novamente.'), nl.
 
-/* Fim do jogo */
+misseis(Qtd) :-
+  write('Você ainda tem '), write(Qtd), write(' mísseis.'), nl, nl.
+
+ultimoMissel :-
+  write('Resta apenas um míssel!'), nl, nl.
+
+misseisEsgotados :-
+  write('Seus mísseis acabaram!'), nl, nl.
 
 gameOver :-
   write('---------------------------------------------------'), nl,
-  write('Voce nao foi capaz de destruir as bases inimigas a tempo.'), nl,
-  write('---------------------------------------------------')
-  sair().
+  write(' Game Over!'), nl,
+  write('---------------------------------------------------').
 
 vitoria :-
   write('---------------------------------------------------'), nl,
-  write('Você destruiu todas as bases inimiga e conseguiu SALVAR O MUNDO!'), nl,
-  write('---------------------------------------------------')
-  sair().
+  write('Você destruiu toda as Bases inimigas !! Parabéns, estrategista!'), nl,
+  write('---------------------------------------------------').
 
-resumo :-
-	writeln('   No ano de 2046, um grupo de cientista conseguem terminar o maior feito'),
- 	writeln('da humanidade “um botão de reiniciar” uma máquina do tempo. Motivo para'),
-	writeln('ser comemorado pois a única salvação da terra é voltar no tempo e destruir'),
-	writeln('todas as bases que contém o vírus que acabou com quase toda a população do'), 
-	writeln('planeta. Irineu foi o soldado qualificado para essa missão , voltando para'),
-	writeln('o ano de 2014, após 5 anos preso nas instalações secretas da CIA conseguiu'),
-	writeln('convencer o diretor da CIA alertando de diversos desastres antes mesmo de ter'), 
-	writeln('acontecido. Só que a arma biológica irá ser usada no ano de 2019 no dia 5 de'),
-	writeln('março e faltando apenas um dia para impedir esses ataques, vão bombardear pontos'),
-	writeln('exatos para a destruição dessas instalações e assim salvando a humanidade.'),
-	writeln('Ajude Irineu a Salvar o Mundo !!!'),nl,
-	writeln('--------------------------------------------------------------------------'),nl.
+/* Imprime uma mensagem na tela e lê um número da entrada */
+inserir_numero(Prompt, Numero) :-
+  write(Prompt),
+  write(': '),
+  read(Numero).
 
-/* Busca De Elemento */
 
-encontraElementoNaMatriz(Matriz, Linha, Coluna, Simbolo) :-
-  nth0(Linha, Matriz, ListaDaPos),
-  nth0(Coluna, ListaDaPos, Simbolo).
-
-/*Funções para verificar se existe base*/
+/* Funções que verificam a existência de elementos em listas e matriz */
 
 contem([X|_], X).
 contem([_|T], X) :-
   contem(T, X).
 
-existemBase([H|_]) :- contem(H, n).
-existemBase([_|T]) :- existemBase(T).
+existemNavios([H|_]) :- contem(H, n).
+existemNavios([_|T]) :- existemNavios(T).
 
-/* Criação do tabuleiro */
+/* Funções de inserção de Bases no tabuleiro */
+
+/*Tamanho 4*/
+inserirBPC(Tabuleiro, NovoTabuleiro):-
+    random(0,6,Linha),random(0,6,Coluna),random(0,2,Orientacao),
+    encontraSimboloNaMatriz(Tabuleiro, Linha, Coluna, _),Coluna2 is Coluna+1,Coluna3 is Coluna+2,Coluna4 is Coluna+3, Linha2 is Linha+1,Linha3 is Linha+2,Linha4 is Linha+3,
+ (
+ (Orientacao == 0) -> alteraValorNoTabuleiro(Tabuleiro, Linha, Coluna, b, Tabuleiro2),alteraValorNoTabuleiro(Tabuleiro2, Linha, Coluna2, b, Tabuleiro3),alteraValorNoTabuleiro(Tabuleiro3, Linha, Coluna3, b, Tabuleiro4),alteraValorNoTabuleiro(Tabuleiro4, Linha, Coluna4, b, NovoTabuleiro);
+ (Orientacao == 1) -> alteraValorNoTabuleiro(Tabuleiro, Linha, Coluna, b, Tabuleiro2),alteraValorNoTabuleiro(Tabuleiro2, Linha2, Coluna, b, Tabuleiro3),alteraValorNoTabuleiro(Tabuleiro3, Linha3, Coluna, b, Tabuleiro4),alteraValorNoTabuleiro(Tabuleiro4, Linha4, Coluna, b, NovoTabuleiro)
+
+ ).
+
+/*Tamanho 2*/
+inserirBTM(Tabuleiro, NovoTabuleiro):-
+    random(0,10,Linha),random(0,10,Coluna),random(0,2,Orientacao),
+    encontraSimboloNaMatriz(Tabuleiro, Linha, Coluna, Simbolo),Coluna2 is Coluna+1, Linha2 is Linha+1, encontraSimboloNaMatriz(Tabuleiro, Linha, Coluna2, Simbolo2),encontraSimboloNaMatriz(Tabuleiro, Linha2, Coluna, Simbolo3),
+ (
+ (Simbolo == ~), (Simbolo2 == ~), (Orientacao == 0) -> alteraValorNoTabuleiro(Tabuleiro, Linha, Coluna, n, Tabuleiro2),alteraValorNoTabuleiro(Tabuleiro2, Linha, Coluna2, n, NovoTabuleiro);
+ (Simbolo == ~), (Simbolo3 == ~), (Orientacao == 1) -> alteraValorNoTabuleiro(Tabuleiro, Linha, Coluna, n, Tabuleiro2),alteraValorNoTabuleiro(Tabuleiro2, Linha2, Coluna, n, NovoTabuleiro);
+ (Orientacao == 0),((Simbolo == n);(Simbolo2 == n))-> inserirCruiser(Tabuleiro, NovoTabuleiro);
+ (Orientacao == 1),((Simbolo == n);(Simbolo3 == n))-> inserirCruiser(Tabuleiro, NovoTabuleiro)
+
+ ).
+
+/*Tamanho 1*/
+inserirCT(Tabuleiro, NovoTabuleiro):-random(0,11,Linha),random(0,11,Coluna),
+    encontraSimboloNaMatriz(Tabuleiro, Linha, Coluna, Simbolo),
+ (
+ (Simbolo == ~) -> alteraValorNoTabuleiro(Tabuleiro, Linha, Coluna, a, NovoTabuleiro);
+ (Simbolo == a) -> inserirCT(Tabuleiro, NovoTabuleiro)
+ ).
 
 gerarTabuleiro([[~,~,~,~,~,~,~,~,~,~,~,~],[~,~,~,~,~,~,~,~,~,~,~,~],[~,~,~,~,~,~,~,~,~,~,~,~],
 [~,~,~,~,~,~,~,~,~,~,~,~],[~,~,~,~,~,~,~,~,~,~,~,~],[~,~,~,~,~,~,~,~,~,~,~,~],
 [~,~,~,~,~,~,~,~,~,~,~,~],[~,~,~,~,~,~,~,~,~,~,~,~],[~,~,~,~,~,~,~,~,~,~,~,~],
 [~,~,~,~,~,~,~,~,~,~,~,~],[~,~,~,~,~,~,~,~,~,~,~,~],[~,~,~,~,~,~,~,~,~,~,~,~]]).
 
-imprimeTabuleiroJogador(Tabuleiro) :-
-  write('############ BOMBARDMENT OF THE VIRUS ###########'),nl,nl,
-  write('    A   B   C   D   E   F   G   H   I   J   L   M'),nl,nl,
-  imprimeMatrizJogador(Tabuleiro, 0),
-  write('_ = Terreno | X = TIRO PERDIDO'), nl, nl.
-	
-imprimeMatrizJogador([], _).
-imprimeMatrizJogador([H|T], Index) :-
-    write(Index),
-    write('  '), 
-    imprimeLinhaJogador(H), nl,nl,
-    NewIndex is Index+1,
-    imprimeMatrizJogador(T, NewIndex).
-
-imprimeLinhaJogador([]).
-imprimeLinhaJogador([H|T]) :-
-  (H == '~', write('|_|');
-  H == n, write('~');
-  H == x, write('x')), write(' '),
-  imprimeLinhaJogador(T).
-
-converte(Letra, Numero) :-
-  Letra = a -> Numero = 1;
-  Letra = b -> Numero = 2;
-  Letra = c -> Numero = 3;
-  Letra = d -> Numero = 4;
-  Letra = e -> Numero = 5;
-  Letra = f -> Numero = 6;
-  Letra = g -> Numero = 7;
-  Letra = h -> Numero = 8;
-  Letra = i -> Numero = 9;
-  Letra = j -> Numero = 10;
-  Letra = l -> Numero = 11;
-  Letra = m -> Numero = 12.
-  
-atirar(Retorno, Tiros, Pontos) :-
-  Retorno =:= 1 -> Tiros = Tiros - 1, Pontos = Pontos + 1, jogar(Tiros, Pontos);
-  Retorno =:= 2 -> Tiros = Tiros - 1, jogar(Tiros, Pontos);
-  Retorno =:= 3 -> jogar(Tiros, Pontos). 
-
-atirar(Coluna, Linha, Tabuleiro, Tiros, Pontos) :-
-  write('atirar'),
-  percorrerMatriz(Coluna, Linha, Tabuleiro, Tiros, Pontos).
-   
-
-percorrerMatriz(Coluna, Linha, Tabuleiro, Tiros, Pontos) :-  
-  percorrerLinha(Linha, Tabuleiro, T),
-  percorrerColuna(Coluna, T, Retorno),
-  atirar(Retorno, Tiros, Pontos).
-
-percorrerLinha(Linha, X, [T|_]) :- 
-  Linha =:= X -> T;
-  Linha =\= X -> Y is X+1, J is [H|Z], percorrerLinha(Coluna, Y, J).
-
-percorrerLinha(Linha, Tabuleiro, T) :- 
- percorrerLinha(Linha, 0, R),
- T = R.
-  
-percorrerColuna(Coluna, X, [T|_]) :- 
-  Coluna =:= X -> T;
-  Coluna =\= X -> Y is X+1, J is [H|Z], percorrerColuna(Coluna, Y, J).
-
-percorrerColuna(Coluna, Linha, T) :- 
- percorrerColuna(Coluna, 0, Linha, Retorno),
- T = Retorno.
+inserirBase(Tabuleiro, NovoTabuleiro):-
+    inserirBPC(Tabuleiro, Tabuleiro2),
+	inserirBTM(Tabuleiro2, Tabuleiro3),
+	inserirBTM(Tabuleiro3, Tabuleiro4),
+	inserirCT(Tabuleiro4, Tabuleiro5),
+	inserirCT(Tabuleiro5, Tabuleiro6),
+	inserirCT(Tabuleiro6, Tabuleiro7),
+	inserirCT(Tabuleiro7, NovoTabuleiro).
 
 
-validarCondicaoParada(Tiros, Pontos, Tabuleiro) :-
-  Pontos =:= 18 -> vitoria();
-  Tiros =:= 0 -> gameOver();
-  Tiros > 0 -> receberCoodenadas(Tiros, Pontos,Tabuleiro).     
-  
-
-receberCoodenadas(Tiros, Pontos, Tabuleiro) :-    
-  selecione,  
-  nl,write('Digite Numero da Linha: '),
-   read_line_to_codes(user_input, LinhaNumero),
-      string_to_atom(LinhaNumero,Numero),
-         atom_number(Numero,Linha),
-  write('Digite Letra da Coluna: '),  
-   read_line_to_codes(user_input, ColunaLetra),
-      string_to_atom(ColunaLetra, ColunaLetra2),
-      converte(ColunaLetra2, Coluna), 
-  atirar(Coluna, Linha, Tabuleiro,  Tiros, Pontos).
-
-sair() :- halt(0).
-
-jogar(Tiros, Pontos, Tabuleiro) :-
+/* Execução da lógica sequencial do jogo */
+jogar(Tabuleiro, Misseis) :-
+  Misseis > 0,
   imprimeTabuleiroJogador(Tabuleiro),
-  validarCondicaoParada(Tiros, Pontos, Tabuleiro).
+  atirar(Tabuleiro, NovoTabuleiro), NovosMisseis is Misseis-1.
 
-
+/* Execução do programa */
+:- initialization(main).
 main :-
-  resumo(),
-  gerarTabuleiro(TabuleiroRamdomicoAux),  
-  jogar(45,0,TabuleiroRamdomicoAux).
+  gerarTabuleiro(TabuleiroRamdomicoAux),
+  inserirBase(TabuleiroRamdomicoAux, TabuleiroRamdomico),
+  jogar(TabuleiroRamdomico, 40).
