@@ -49,10 +49,10 @@ imprimeMatrizJogador([H|T], Index) :-
 imprimeLinhaJogador([]).
 imprimeLinhaJogador([H|T]) :-
   (H == '~', write('|_|');
-  H == n, write('|_|');
-  H == b, write('|_|');
-  H == a, write('|_|');
-  H == @, write('|_|');
+  H == n, write('|o|');
+  H == b, write('|*|');
+  H == a, write('|Q|');
+  H == @, write('|X|');
   H == &, write('')), write(' '),
   imprimeLinhaJogador(T).
 
@@ -61,7 +61,7 @@ imprimeTabuleiroReal(Tabuleiro) :-
   write('    A   B   C   D   E   F   G   H   I   J   L   M'),nl,nl,
   imprimeLinhas(Tabuleiro, 0),
   writeln('~ = Terreno | n = Area | X = TIRO PERDIDO').
-
+  
 imprimeLinhas([],_).
 imprimeLinhas([H|T],Index) :-
 	write(Index), write('  '), imprimeLinha(H), nl,nl,
@@ -182,7 +182,7 @@ jogar(Tabuleiro, Misseis) :-
   NovosMisseis =:= 1 -> ultimoMissel, jogar(NovoTabuleiro, NovosMisseis);
   NovosMisseis =:= 0 -> misseisEsgotados, imprimeTabuleiroReal(NovoTabuleiro), gameOver)
   ).
-
+  
 /* Execução do programa */
 :- initialization(main).
 main :-
