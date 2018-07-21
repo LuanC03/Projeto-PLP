@@ -3,7 +3,19 @@
 atirar(Tabuleiro, NovoTabuleiro) :-
   selecione,
   inserir_numero('Linha', Linha),
-  inserir_numero('Coluna', Coluna).
+  inserir_numero('Coluna', Coluna),
+  (Linha >= 0, Linha =< 12, Coluna >= 0, Coluna =< 12 ->
+    encontraSimboloNaMatriz(Tabuleiro, Linha, Coluna, Simbolo),
+    (
+    (Simbolo == ~) -> alteraValorNoTabuleiro(Tabuleiro, Linha, Coluna, @, NovoTabuleiro), errou, nl;
+    (Simbolo == n) -> alteraValorNoTabuleiro(Tabuleiro, Linha, Coluna, o, NovoTabuleiro), acertou, nl;
+    (Simbolo == b) -> alteraValorNoTabuleiro(Tabuleiro, Linha, Coluna, *, NovoTabuleiro), acertou, nl;
+    (Simbolo == a) -> alteraValorNoTabuleiro(Tabuleiro, Linha, Coluna, Q, NovoTabuleiro), acertou, nl;
+    (Simbolo == @) -> invalido, atirar(Tabuleiro, NovoTabuleiro);
+    (Simbolo == x) -> invalido, atirar(Tabuleiro, NovoTabuleiro)
+    );
+    selecaoInvalida, atirar(Tabuleiro, NovoTabuleiro)
+  ).
 
 alteraValorNoTabuleiro([H|T], 0, Coluna, NovoValor, [J|T]) :- substituir(H, Coluna, NovoValor, J).
 alteraValorNoTabuleiro([H|T], Linha, Coluna, NovoValor, [H|U]) :-
@@ -20,13 +32,13 @@ substituir([H|T], Index, NewElement, [H|U]) :-
 
 /* EXIBIÇÃO */
 
-/* Impressão da visão que o jogador tem do tabuleiro, omitindo navios */
+/* Impressão da visão que o jogador tem doh tabuleiro, omitindo navios */
 
 imprimeTabuleiroJogador(Tabuleiro) :-
   write('############ BOMBARDMENT OF THE VIRUS ###########'),nl,nl,
   write('    A   B   C   D   E   F   G   H   I   J   L   M'),nl,nl,
   imprimeMatrizJogador(Tabuleiro, 0),
-  write('~ = Terreno | n = Area | X = TIRO PERDIDO').
+  writeln('~ = Terreno | n = Area | X = TIRO PERDIDO').
 
 imprimeMatrizJogador([], _).
 imprimeMatrizJogador([H|T], Index) :-
@@ -39,11 +51,27 @@ imprimeLinhaJogador([H|T]) :-
   (H == '~', write('|_|');
   H == n, write('|o|');
   H == b, write('|*|');
-  H == a, write('|#|');
+  H == a, write('|Q|');
   H == @, write('|X|');
   H == &, write('')), write(' '),
   imprimeLinhaJogador(T).
 
+imprimeTabuleiroReal(Tabuleiro) :-
+  write('############ BOMBARDMENT OF THE VIRUS ###########'),nl,nl,
+  write('    A   B   C   D   E   F   G   H   I   J   L   M'),nl,nl,
+  imprimeLinhas(Tabuleiro, 0),
+  writeln('~ = Terreno | n = Area | X = TIRO PERDIDO').
+  
+imprimeLinhas([],_).
+imprimeLinhas([H|T],Index) :-
+	write(Index), write('  '), imprimeLinha(H), nl,nl,
+	NewIndex is Index+1,
+	imprimeLinhas(T,NewIndex).
+
+imprimeLinha([]).
+imprimeLinha([H|T]) :-
+	write(H), write('  '),
+	imprimeLinha(T).
 
 /* Impressões simples */
 
@@ -99,7 +127,6 @@ existemNavios([_|T]) :- existemNavios(T).
 
 /* Funções de inserção de Bases no tabuleiro */
 
-/*Tamanho 4*/
 inserirBPC(Tabuleiro, NovoTabuleiro):-
     random(0,6,Linha),random(0,6,Coluna),random(0,2,Orientacao),
     encontraSimboloNaMatriz(Tabuleiro, Linha, Coluna, _),Coluna2 is Coluna+1,Coluna3 is Coluna+2,Coluna4 is Coluna+3, Linha2 is Linha+1,Linha3 is Linha+2,Linha4 is Linha+3,
@@ -148,8 +175,14 @@ inserirBase(Tabuleiro, NovoTabuleiro):-
 jogar(Tabuleiro, Misseis) :-
   Misseis > 0,
   imprimeTabuleiroJogador(Tabuleiro),
-  atirar(Tabuleiro, NovoTabuleiro), NovosMisseis is Misseis-1.
-
+  atirar(Tabuleiro, NovoTabuleiro), NovosMisseis is Misseis-1,
+  (
+  not( existemNavios(NovoTabuleiro) ) -> imprimeTabuleiroReal(NovoTabuleiro), vitoria;
+  (NovosMisseis > 1 -> misseis(NovosMisseis), jogar(NovoTabuleiro, NovosMisseis);
+  NovosMisseis =:= 1 -> ultimoMissel, jogar(NovoTabuleiro, NovosMisseis);
+  NovosMisseis =:= 0 -> misseisEsgotados, imprimeTabuleiroReal(NovoTabuleiro), gameOver)
+  ).
+  
 /* Execução do programa */
 :- initialization(main).
 main :-
