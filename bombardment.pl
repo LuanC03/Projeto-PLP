@@ -36,21 +36,20 @@ vitoria :-
 /* Regras para realizar tiros, manipulando o tabuleiro */ 
 
 converte(Letra, Numero) :- 
- Letra = a -> Numero = 1;
- Letra = b -> Numero = 2;
- Letra = c -> Numero = 3;
- Letra = d -> Numero = 4;
- Letra = e -> Numero = 5;
- Letra = f -> Numero = 6;
- Letra = g -> Numero = 7;
- Letra = h -> Numero = 8;
- Letra = i -> Numero = 9;
- Letra = j -> Numero = 10;
- Letra = l -> Numero = 11;
- Letra = m -> Numero = 12.
+ Letra = a -> Numero = 0;
+ Letra = b -> Numero = 1;
+ Letra = c -> Numero = 2;
+ Letra = d -> Numero = 3;
+ Letra = e -> Numero = 4;
+ Letra = f -> Numero = 5;
+ Letra = g -> Numero = 6;
+ Letra = h -> Numero = 7;
+ Letra = i -> Numero = 8;
+ Letra = j -> Numero = 9;
+ Letra = l -> Numero = 10;
+ Letra = m -> Numero = 11.
 
 atirar(Tabuleiro, NovoTabuleiro) :-
- selecione,
  inserir_numero('Linha', Linha),
  inserir_numero('Coluna', ColunaLetra),
  converte(ColunaLetra, Coluna),
