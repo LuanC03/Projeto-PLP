@@ -40,29 +40,33 @@ substituir([H|T], Index, NewElement, [H|U]) :-
 /* Impressão da visão que o jogador tem do tabuleiro, omitindo navios */
 
 imprimeTabuleiroJogador(Tabuleiro) :-
-  write('############ BOMBARDMENT OF THE VIRUS ###########'),nl,nl,
-  write('    A   B   C   D   E   F   G   H   I'),nl,nl,
+  write('######################################'),nl,
+  write('###### BOMBARDMENT OF THE VIRUS ######'),nl,
+  write('######################################'),nl,
+  write('   A   B   C   D   E   F   G   H   I'),nl,
+  write('--------------------------------------'),nl,
   imprimeMatrizJogador(Tabuleiro, 0),
-  writeln(' Legenda dos tabuleiros	Base:   Tamanho        	 
- X - Bomba  perdida    	CT      	1            	 
- @ - CT                	IAPA    	2          	 
- # - IAPA              	BMT     	3          	 
- o - BTM               	BPC     	4          	 
- * - BPC' ).
+  writeln(''),
+  writeln('
+ X - Bomba  perdida    	      Base:   Tamanho:
+ @ - CT                	      CT    	 1
+ # - IAPA              	      IAPA       2
+ o - BTM               	      BMT     	 3
+ * - BPC                      BPC        4').
 
 imprimeMatrizJogador([], _).
 imprimeMatrizJogador([H|T], Index) :-
-    write(Index), write('  '), imprimeLinhaJogador(H), nl,nl,
+    write(Index), write(' '), imprimeLinhaJogador(H), nl,
     NewIndex is Index+1,
     imprimeMatrizJogador(T, NewIndex).
 
 imprimeLinhaJogador([]).
 imprimeLinhaJogador([H|T]) :-
-  (H == '0', write('|_|');
-  H == '1', write('|_|');
-  H == '2', write('|_|');
-  H == '3', write('|_|');
-  H == '4', write('|_|');
+  (H == '0', write('|.|');
+  H == '1', write('|.|');
+  H == '2', write('|.|');
+  H == '3', write('|.|');
+  H == '4', write('|.|');
   H == '#', write('|#|');
   H == 'o', write('|o|');
   H == '*', write('|*|');
@@ -73,25 +77,29 @@ imprimeLinhaJogador([H|T]) :-
 /* Impressão do tabuleiro exibindo os navios inimigos */
 
 imprimeTabuleiroReal(Tabuleiro) :-
-  write('############ BOMBARDMENT OF THE VIRUS ###########'),nl,nl,
-  write('   A   B   C   D   E   F   G   H   I'),nl,nl,
+  write('######################################'),nl,
+  write('###### BOMBARDMENT OF THE VIRUS ######'),nl,
+  write('######################################'),nl,
+  write('   A   B   C   D   E   F   G   H   I'),nl,
+  write('--------------------------------------'),nl,
   imprimeLinhas(Tabuleiro, 0),
-  writeln(' Legenda dos tabuleiros	Base:   Tamanho        	 
- X - Bomba  perdida    	CT      	1            	 
- @ - CT                	IAPA    	2          	 
- # - IAPA              	BMT     	3          	 
- o - BTM               	BPC     	4          	 
- * - BPC' ).
+  writeln(''),
+  writeln('
+ X - Bomba  perdida    	      Base:   Tamanho:
+ @ - CT                	      CT    	 1
+ # - IAPA              	      IAPA       2
+ o - BTM               	      BMT     	 3
+ * - BPC                      BPC        4').
 
 imprimeLinhas([], _).
 imprimeLinhas([H|T], Index) :-
-  write(Index), write('  '), imprimeLinha(H), nl,nl,
+  write(Index), write(' '), imprimeLinha(H), nl,
   NewIndex is Index+1,
   imprimeLinhas(T, NewIndex).
 
 imprimeLinha([]).
-imprimeLinha([H|T]) :-
-  write(H), write('   '),
+imprimeLinha([H|T]) :-write("|"),
+  write(H), write('| '),
   imprimeLinha(T).
 
 /* Impressões simples */
@@ -121,12 +129,12 @@ misseisEsgotados :-
   write('Seus mísseis acabaram!'), nl, nl.
 gameOver :-
   write('---------------------------------------------------'), nl,
-  write('O Mundo acabou', nl,
+  write('O Mundo acabou'), nl,
   write('---------------------------------------------------').
 
 vitoria :-
   write('---------------------------------------------------'), nl,
-  write(' Voce conseguiu destruir todas as bases inimigas                      
+  write(' Voce conseguiu destruir todas as bases inimigas
                     VOCE SALVOU O MUNDO <3 '), nl,
   write('---------------------------------------------------').
 
@@ -184,7 +192,7 @@ inserirIAPA(Tabuleiro, NovoTabuleiro):-
  (Orientacao == 1),((Simbolo == '1');(Simbolo2 == '1'))-> inserirIAPA(Tabuleiro, NovoTabuleiro);
  (Orientacao == 1),((Simbolo == '2');(Simbolo2 == '2'))-> inserirIAPA(Tabuleiro, NovoTabuleiro);
  (Orientacao == 1),((Simbolo == '3');(Simbolo2 == '3'))-> inserirIAPA(Tabuleiro, NovoTabuleiro);
- (Orientacao == 1),((Simbolo == '4');(Simbolo3 == '4'))-> inserirIAPA(Tabuleiro, NovoTabuleiro)
+ (Orientacao == 1),((Simbolo == '4');(Simbolo2 == '4'))-> inserirIAPA(Tabuleiro, NovoTabuleiro)
  ).
 /*Alocação BMT*/
 
@@ -195,14 +203,14 @@ inserirBMT(Tabuleiro, NovoTabuleiro):-
 alteraValorNoTabuleiro(Tabuleiro3,  Linha, Coluna3, '3', NovoTabuleiro);
  (Simbolo == '0'), (Simbolo3 == '0'), (Orientacao == 1) -> alteraValorNoTabuleiro(Tabuleiro, Linha, Coluna, '3', Tabuleiro2),alteraValorNoTabuleiro(Tabuleiro2,  Linha2, Coluna, '3', Tabuleiro3),
 alteraValorNoTabuleiro(Tabuleiro3,  Linha3, Coluna, '3', NovoTabuleiro);
- (Orientacao == 0),((Simbolo == '1');(Simbolo2 == '1'))-> inserirBMT(Tabuleiro, NovoTabuleiro);
- (Orientacao == 0),((Simbolo == '2');(Simbolo2 == '2'))-> inserirBMT(Tabuleiro, NovoTabuleiro);
- (Orientacao == 0),((Simbolo == '3');(Simbolo2 == '3'))-> inserirBMT(Tabuleiro, NovoTabuleiro);
- (Orientacao == 0),((Simbolo == '4');(Simbolo2 == '4'))-> inserirBMT(Tabuleiro, NovoTabuleiro);
- (Orientacao == 1),((Simbolo == '1');(Simbolo2 == '1'))-> inserirBMT(Tabuleiro, NovoTabuleiro);
- (Orientacao == 1),((Simbolo == '2');(Simbolo2 == '2'))-> inserirBMT(Tabuleiro, NovoTabuleiro);
- (Orientacao == 1),((Simbolo == '3');(Simbolo2 == '3'))-> inserirBMT(Tabuleiro, NovoTabuleiro);
- (Orientacao == 1),((Simbolo == '4');(Simbolo3 == '4'))-> inserirBMT(Tabuleiro, NovoTabuleiro)).
+ (Orientacao == 0),((Simbolo == '1');(Simbolo2 == '1');(Simbolo3 == '1'))-> inserirBMT(Tabuleiro, NovoTabuleiro);
+ (Orientacao == 0),((Simbolo == '2');(Simbolo2 == '2');(Simbolo3 == '2'))-> inserirBMT(Tabuleiro, NovoTabuleiro);
+ (Orientacao == 0),((Simbolo == '3');(Simbolo2 == '3');(Simbolo3 == '3'))-> inserirBMT(Tabuleiro, NovoTabuleiro);
+ (Orientacao == 0),((Simbolo == '4');(Simbolo2 == '4');(Simbolo3 == '4'))-> inserirBMT(Tabuleiro, NovoTabuleiro);
+ (Orientacao == 1),((Simbolo == '1');(Simbolo2 == '1');(Simbolo3 == '1'))-> inserirBMT(Tabuleiro, NovoTabuleiro);
+ (Orientacao == 1),((Simbolo == '2');(Simbolo2 == '2');(Simbolo3 == '2'))-> inserirBMT(Tabuleiro, NovoTabuleiro);
+ (Orientacao == 1),((Simbolo == '3');(Simbolo2 == '3');(Simbolo3 == '3'))-> inserirBMT(Tabuleiro, NovoTabuleiro);
+ (Orientacao == 1),((Simbolo == '4');(Simbolo3 == '4');(Simbolo3 == '4'))-> inserirBMT(Tabuleiro, NovoTabuleiro)).
 
 inserirCT(Tabuleiro, NovoTabuleiro):-random(0,9,Linha),random(0,9,Coluna),
  encontraSimboloNaMatriz(Tabuleiro, Linha, Coluna, Simbolo),
@@ -227,6 +235,8 @@ inserirBases(Tabuleiro, NovoTabuleiro):-
 jogar(Tabuleiro, Misseis) :-
   Misseis > 0,
   imprimeTabuleiroJogador(Tabuleiro),
+  write(' Misseis restantes: '),
+  writeln(Misseis),nl,
   atirar(Tabuleiro, NovoTabuleiro), NovosMisseis is Misseis-1,
   (
   not( existeBase(NovoTabuleiro) ) -> imprimeTabuleiroReal(NovoTabuleiro), vitoria;
