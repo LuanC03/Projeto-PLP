@@ -1,3 +1,4 @@
+use_module(mensagens).
 /* Regras para realizar tiros, manipulando o tabuleiro */
 
 atirar(Tabuleiro, NovoTabuleiro) :-
@@ -101,42 +102,6 @@ imprimeLinha([]).
 imprimeLinha([H|T]) :-write("|"),
   write(H), write('| '),
   imprimeLinha(T).
-
-/* Impressões simples */
-
-acertou :-
-  write('ACERTOU!'), nl.
-
-errou :-
-  write('ERROU!'), nl.
-
-invalido :-
-  write('VOCÊ JA ATIROU AQUI!'), nl.
-
-selecione :-
-  write('SELECIONE AS COORDENADAS DO SEU TIRO.'), nl.
-
-selecaoInvalida :-
-  write('COORDENADAS INVÁLIDAS!'), nl.
-
-misseis(Qtd) :-
-  write('Você ainda tem '), write(Qtd), write(' mísseis.'), nl, nl.
-
-ultimoMissel :-
-  write('Resta apenas um míssel!'), nl, nl.
-
-misseisEsgotados :-
-  write('Seus mísseis acabaram!'), nl, nl.
-gameOver :-
-  write('---------------------------------------------------'), nl,
-  write('O Mundo acabou'), nl,
-  write('---------------------------------------------------').
-
-vitoria :-
-  write('---------------------------------------------------'), nl,
-  write(' VOCE CONSEGUIU DESTRUIR TODAS AS BASES INIMIGAS!
-                    VOCE SALVOU O MUNDO <3 '), nl,
-  write('---------------------------------------------------').
 
 /* Imprime uma mensagem na tela e lê um número da entrada */
 inserir_numero(Prompt, Numero) :-
