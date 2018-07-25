@@ -134,7 +134,7 @@ gameOver :-
 
 vitoria :-
   write('---------------------------------------------------'), nl,
-  write(' Voce conseguiu destruir todas as bases inimigas
+  write(' VOCE CONSEGUIU DESTRUIR TODAS AS BASES INIMIGAS!
                     VOCE SALVOU O MUNDO <3 '), nl,
   write('---------------------------------------------------').
 
