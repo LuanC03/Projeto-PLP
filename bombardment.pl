@@ -1,4 +1,5 @@
 use_module(mensagens).
+
 /* Regras para realizar tiros, manipulando o tabuleiro */
 
 atirar(Tabuleiro, NovoTabuleiro) :-
@@ -159,6 +160,7 @@ inserirIAPA(Tabuleiro, NovoTabuleiro):-
  (Orientacao == 1),((Simbolo == '3');(Simbolo2 == '3'))-> inserirIAPA(Tabuleiro, NovoTabuleiro);
  (Orientacao == 1),((Simbolo == '4');(Simbolo2 == '4'))-> inserirIAPA(Tabuleiro, NovoTabuleiro)
  ).
+
 /*Alocação BMT*/
 
 inserirBMT(Tabuleiro, NovoTabuleiro):-
@@ -186,7 +188,15 @@ inserirCT(Tabuleiro, NovoTabuleiro):-random(0,9,Linha),random(0,9,Coluna),
  (Simbolo == '4') -> inserirCT(Tabuleiro, NovoTabuleiro)
 ).
 
-gerarTabuleiro([['0','0','0','0','0','0','0','0','0'],['0','0','0','0','0','0','0','0','0'],['0','0','0','0','0','0','0','0','0'],['0','0','0','0','0','0','0','0','0'],['0','0','0','0','0','0','0','0','0'],['0','0','0','0','0','0','0','0','0'],['0','0','0','0','0','0','0','0','0'],['0','0','0','0','0','0','0','0','0'],['0','0','0','0','0','0','0','0','0']]).
+gerarTabuleiro([['0','0','0','0','0','0','0','0','0'],
+                ['0','0','0','0','0','0','0','0','0'],
+                ['0','0','0','0','0','0','0','0','0'],
+                ['0','0','0','0','0','0','0','0','0'],
+                ['0','0','0','0','0','0','0','0','0'],
+                ['0','0','0','0','0','0','0','0','0'],
+                ['0','0','0','0','0','0','0','0','0'],
+                ['0','0','0','0','0','0','0','0','0'],
+                ['0','0','0','0','0','0','0','0','0']]).
 
 inserirBases(Tabuleiro, NovoTabuleiro):-
    inserirBPC(Tabuleiro, Tabuleiro2),

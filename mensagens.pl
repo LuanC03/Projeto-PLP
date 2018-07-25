@@ -10,7 +10,7 @@ errou :-
 
 invalido :-
   write('VOCÊ JA ATIROU AQUI!'), nl.
-/* Predicado para entradas invalidas */
+/* Predicado para quando o usuário atirar em um local já selecionado anteriormente */
 
 selecione :-
   write('SELECIONE AS COORDENADAS DO SEU TIRO.'), nl.
@@ -20,12 +20,14 @@ selecaoInvalida :-
 
 misseis(Qtd) :-
   write('VOCÊ AINDA TEM '), write(Qtd), write(' MÍSSEIS.'), nl, nl.
+/* Predicado para informar a quantidade de mísseis disponíveis */
 
 ultimoMissel :-
   write('RESTA APENAS UM MÍSSEL!'), nl, nl.
 
 misseisEsgotados :-
   write('SEUS MÍSSEIS ACABARAM!'), nl, nl.
+
 gameOver :-
   write('---------------------------------------------------'), nl,
   write('O MUNDO ACABOU!'), nl,
@@ -36,4 +38,3 @@ vitoria :-
   write(' VOCE CONSEGUIU DESTRUIR TODAS AS BASES INIMIGAS!
                     VOCE SALVOU O MUNDO <3 '), nl,
   write('---------------------------------------------------').
-/* Impressões simples */
