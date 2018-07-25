@@ -11,7 +11,7 @@ atirar(Tabuleiro, NovoTabuleiro) :-
     (Simbolo == '0') -> alteraValorNoTabuleiro(Tabuleiro, Linha, Coluna, x, NovoTabuleiro), errou, nl;
     (Simbolo == '1') -> alteraValorNoTabuleiro(Tabuleiro, Linha, Coluna, '@', NovoTabuleiro), acertou, nl;
     (Simbolo == '2') -> alteraValorNoTabuleiro(Tabuleiro, Linha, Coluna, '#', NovoTabuleiro), acertou, nl;
-    (Simbolo == 'o') -> alteraValorNoTabuleiro(Tabuleiro, Linha, Coluna, '#', NovoTabuleiro), acertou, nl;
+    (Simbolo == '3') -> alteraValorNoTabuleiro(Tabuleiro, Linha, Coluna, 'o', NovoTabuleiro), acertou, nl;
     (Simbolo == '4') -> alteraValorNoTabuleiro(Tabuleiro, Linha, Coluna, '*', NovoTabuleiro), acertou, nl;
     (Simbolo == '#') -> invalido, atirar(Tabuleiro, NovoTabuleiro);
     (Simbolo == '@') -> invalido, atirar(Tabuleiro, NovoTabuleiro);
@@ -40,11 +40,11 @@ substituir([H|T], Index, NewElement, [H|U]) :-
 /* Impressão da visão que o jogador tem do tabuleiro, omitindo navios */
 
 imprimeTabuleiroJogador(Tabuleiro) :-
-  write('######################################'),nl,
-  write('###### BOMBARDMENT OF THE VIRUS ######'),nl,
-  write('######################################'),nl,
-  write('   A   B   C   D   E   F   G   H   I'),nl,
-  write('--------------------------------------'),nl,
+  write('\n######################################
+###### BOMBARDMENT OF THE VIRUS ######
+######################################
+   A   B   C   D   E   F   G   H   I
+--------------------------------------'),nl,
   imprimeMatrizJogador(Tabuleiro, 0),
   writeln(''),
   writeln('
@@ -77,11 +77,11 @@ imprimeLinhaJogador([H|T]) :-
 /* Impressão do tabuleiro exibindo os navios inimigos */
 
 imprimeTabuleiroReal(Tabuleiro) :-
-  write('######################################'),nl,
-  write('###### BOMBARDMENT OF THE VIRUS ######'),nl,
-  write('######################################'),nl,
-  write('   A   B   C   D   E   F   G   H   I'),nl,
-  write('--------------------------------------'),nl,
+  write('\n######################################
+###### BOMBARDMENT OF THE VIRUS ######
+######################################
+   A   B   C   D   E   F   G   H   I
+--------------------------------------'),nl,
   imprimeLinhas(Tabuleiro, 0),
   writeln(''),
   writeln('
@@ -105,19 +105,19 @@ imprimeLinha([H|T]) :-write("|"),
 /* Impressões simples */
 
 acertou :-
-  write('ACERTOU UMA BASE INIMIGA!'), nl.
+  write('ACERTOU!'), nl.
 
 errou :-
   write('ERROU!'), nl.
 
 invalido :-
-  write('Você já atirou aqui! Atire em outro lugar.'), nl.
+  write('VOCÊ JA ATIROU AQUI!'), nl.
 
 selecione :-
-  write('Selecione as coordenadas de onde deseja atirar!'), nl.
+  write('SELECIONE AS COORDENADAS DO SEU TIRO.'), nl.
 
 selecaoInvalida :-
-  write('Coordenadas inválidas. Tente novamente.'), nl.
+  write('COORDENADAS INVÁLIDAS!'), nl.
 
 misseis(Qtd) :-
   write('Você ainda tem '), write(Qtd), write(' mísseis.'), nl, nl.
