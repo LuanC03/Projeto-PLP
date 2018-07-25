@@ -199,9 +199,8 @@ inserirBases(Tabuleiro, NovoTabuleiro):-
 /* Execução da lógica sequencial do jogo */
 jogar(Tabuleiro, Misseis) :-
   Misseis > 0,
-  imprimeTabuleiroJogador(Tabuleiro),
-  write(' Misseis restantes: '),
-  writeln(Misseis),nl,
+  imprimeTabuleiroJogador(Tabuleiro),nl,
+  misseis(Misseis),
   atirar(Tabuleiro, NovoTabuleiro), NovosMisseis is Misseis-1,
   (
   not( existeBase(NovoTabuleiro) ) -> imprimeTabuleiroReal(NovoTabuleiro), vitoria;

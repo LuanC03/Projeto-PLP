@@ -2,12 +2,15 @@
 
 acertou :-
   write('ACERTOU!'), nl.
+/* Predicado para informar ao usuário que ele acertou uma estrutura */
 
 errou :-
   write('ERROU!'), nl.
+/* Predicado para informar ao usuário que ele não acertou nenhuma estrutura */
 
 invalido :-
   write('VOCÊ JA ATIROU AQUI!'), nl.
+/* Predicado para entradas invalidas */
 
 selecione :-
   write('SELECIONE AS COORDENADAS DO SEU TIRO.'), nl.
@@ -16,16 +19,16 @@ selecaoInvalida :-
   write('COORDENADAS INVÁLIDAS!'), nl.
 
 misseis(Qtd) :-
-  write('Você ainda tem '), write(Qtd), write(' mísseis.'), nl, nl.
+  write('VOCÊ AINDA TEM '), write(Qtd), write(' MÍSSEIS.'), nl, nl.
 
 ultimoMissel :-
-  write('Resta apenas um míssel!'), nl, nl.
+  write('RESTA APENAS UM MÍSSEL!'), nl, nl.
 
 misseisEsgotados :-
-  write('Seus mísseis acabaram!'), nl, nl.
+  write('SEUS MÍSSEIS ACABARAM!'), nl, nl.
 gameOver :-
   write('---------------------------------------------------'), nl,
-  write('O Mundo acabou'), nl,
+  write('O MUNDO ACABOU!'), nl,
   write('---------------------------------------------------').
 
 vitoria :-
