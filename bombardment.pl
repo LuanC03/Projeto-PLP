@@ -4,8 +4,8 @@ use_module(mensagens).
 
 atirar(Tabuleiro, NovoTabuleiro) :-
   selecione,
-  inserir_numero('Linha', Linha),
-  inserir_numero('Coluna', ColunaLetra),
+  inserir_numero('LINHA', Linha),
+  inserir_numero('COLUNA', ColunaLetra),
   converte(ColunaLetra, Coluna),
   (Linha >= 0, Linha =< 8, Coluna >= 0, Coluna =< 8 ->
     encontraSimboloNaMatriz(Tabuleiro, Linha, Coluna, Simbolo),
@@ -39,7 +39,7 @@ substituir([H|T], Index, NewElement, [H|U]) :-
 
 /* EXIBIÇÃO */
 
-/* Impressão da visão que o jogador tem do tabuleiro, omitindo navios */
+/* Impressão da visão que o jogador tem do tabuleiro, omitindo bases */
 
 imprimeTabuleiroJogador(Tabuleiro) :-
   write('\n######################################
@@ -76,8 +76,7 @@ imprimeLinhaJogador([H|T]) :-
   H == x, write('|x|')), write(' '),
   imprimeLinhaJogador(T).
 
-/* Impressão do tabuleiro exibindo os navios inimigos */
-
+/* Impressão do tabuleiro exibindo as bases inimigas */
 imprimeTabuleiroReal(Tabuleiro) :-
   write('\n######################################
 ###### BOMBARDMENT OF THE VIRUS ######
@@ -123,6 +122,7 @@ converte(Letra, Numero) :-
  Letra = l -> Numero = 10;
  Letra = k -> Numero = 11.
 
+
 /* Funções que verificam a existência de elementos em listas e matriz */
 
 contem([X|_], X).
@@ -135,8 +135,10 @@ existeBase([H|_]) :- contem(H, '3').
 existeBase([H|_]) :- contem(H, '4').
 existeBase([_|T]) :- existeBase(T).
 
-/* Funções de inserção de Navios no tabuleiro */
 
+/* Funções de inserção de Bases no tabuleiro */
+
+/*Alocação BPC*/
 inserirBPC(Tabuleiro, NovoTabuleiro):-
  random(0,6,Linha),random(0,6,Coluna),random(0,2,Orientacao),
  encontraSimboloNaMatriz(Tabuleiro, Linha, Coluna, _),Coluna2 is Coluna+1,Coluna3 is Coluna+2,Coluna4 is Coluna+3,
@@ -145,7 +147,6 @@ inserirBPC(Tabuleiro, NovoTabuleiro):-
  (Orientacao == 1) -> alteraValorNoTabuleiro(Tabuleiro, Linha, Coluna, '4', Tabuleiro2),alteraValorNoTabuleiro(Tabuleiro2, Linha2, Coluna, '4',  Tabuleiro3),alteraValorNoTabuleiro(Tabuleiro3, Linha3, Coluna, '4', Tabuleiro4),alteraValorNoTabuleiro(Tabuleiro4, Linha4, Coluna, '4', NovoTabuleiro)).
 
 /*Alocação IAPA*/
-
 inserirIAPA(Tabuleiro, NovoTabuleiro):-
  random(0,8,Linha),random(0,8,Coluna),random(0,2,Orientacao),
  encontraSimboloNaMatriz(Tabuleiro, Linha, Coluna, Simbolo),Coluna2 is Coluna+1, Linha2 is Linha+1 , encontraSimboloNaMatriz(Tabuleiro, Linha, Coluna2,  Simbolo2),encontraSimboloNaMatriz(Tabuleiro, Linha2, Coluna, Simbolo3),
@@ -162,7 +163,6 @@ inserirIAPA(Tabuleiro, NovoTabuleiro):-
  ).
 
 /*Alocação BMT*/
-
 inserirBMT(Tabuleiro, NovoTabuleiro):-
  random(0,7,Linha),random(0,7,Coluna),random(0,2,Orientacao),
  encontraSimboloNaMatriz(Tabuleiro, Linha, Coluna, Simbolo),Coluna2 is Coluna+1, Linha2 is Linha+1 ,Coluna3 is Coluna+2,Linha3 is Linha+2,encontraSimboloNaMatriz(Tabuleiro, Linha, Coluna2,  Simbolo2),encontraSimboloNaMatriz(Tabuleiro, Linha2, Coluna, Simbolo3),encontraSimboloNaMatriz(Tabuleiro, Linha3, Coluna3, Simbolo3),
@@ -179,6 +179,7 @@ alteraValorNoTabuleiro(Tabuleiro3,  Linha3, Coluna, '3', NovoTabuleiro);
  (Orientacao == 1),((Simbolo == '3');(Simbolo2 == '3');(Simbolo3 == '3'))-> inserirBMT(Tabuleiro, NovoTabuleiro);
  (Orientacao == 1),((Simbolo == '4');(Simbolo3 == '4');(Simbolo3 == '4'))-> inserirBMT(Tabuleiro, NovoTabuleiro)).
 
+/*Alocação CT*/
 inserirCT(Tabuleiro, NovoTabuleiro):-random(0,9,Linha),random(0,9,Coluna),
  encontraSimboloNaMatriz(Tabuleiro, Linha, Coluna, Simbolo),
  ((Simbolo == '0') -> alteraValorNoTabuleiro(Tabuleiro, Linha, Coluna, '1', NovoTabuleiro);
@@ -188,6 +189,7 @@ inserirCT(Tabuleiro, NovoTabuleiro):-random(0,9,Linha),random(0,9,Coluna),
  (Simbolo == '4') -> inserirCT(Tabuleiro, NovoTabuleiro)
 ).
 
+/*Tabuleiro Inicial*/
 gerarTabuleiro([['0','0','0','0','0','0','0','0','0'],
                 ['0','0','0','0','0','0','0','0','0'],
                 ['0','0','0','0','0','0','0','0','0'],
@@ -200,10 +202,10 @@ gerarTabuleiro([['0','0','0','0','0','0','0','0','0'],
 
 inserirBases(Tabuleiro, NovoTabuleiro):-
    inserirBPC(Tabuleiro, Tabuleiro2),
-    inserirIAPA(Tabuleiro2, Tabuleiro3),
-    inserirBMT(Tabuleiro3, Tabuleiro4),
-    inserirCT(Tabuleiro4, Tabuleiro5),
-    inserirCT(Tabuleiro5, NovoTabuleiro).
+   inserirIAPA(Tabuleiro2, Tabuleiro3),
+   inserirBMT(Tabuleiro3, Tabuleiro4),
+   inserirCT(Tabuleiro4, Tabuleiro5),
+   inserirCT(Tabuleiro5, NovoTabuleiro).
 
 
 /* Execução da lógica sequencial do jogo */
